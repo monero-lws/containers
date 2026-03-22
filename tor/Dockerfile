@@ -11,6 +11,7 @@ RUN <<-EOF
        CFLAGS="-O2" ./configure --prefix=/usr --sysconfdir=/etc
        make -j$(nproc)
        make install
+       strip --strip-unneeded /usr/bin/tor
 EOF
 FROM stagex/pallet-clang-gnu-busybox AS staging
 COPY --from=stagex/core-zlib . /zlib
@@ -25,6 +26,7 @@ RUN <<-EOF
         cp -a /xz/usr/lib/*.so* /staged/
         cp -a /openssl/usr/lib/*.so* /staged/
         cp -a /libevent/usr/lib/*.so* /staged/
+	strip --strip-unneeded /staged/*.so
 EOF
 FROM stagex/core-filesystem AS package
 COPY --from=stagex/core-musl . /
