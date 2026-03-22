@@ -12,13 +12,23 @@ RUN <<-EOF
        make -j$(nproc)
        make install
 EOF
+FROM stagex/pallet-clang-gnu-busybox AS staging
+COPY --from=stagex/core-zlib . /zlib
+COPY --from=stagex/core-libzstd . /libzstd
+COPY --from=stagex/core-xz . /xz
+COPY --from=stagex/core-openssl . /openssl
+COPY --from=stagex/user-libevent . /libevent
+RUN <<-EOF
+        mkdir /staged
+        cp -a /zlib/usr/lib/*.so* /staged/
+        cp -a /libzstd/usr/lib/*.so* /staged/
+        cp -a /xz/usr/lib/*.so* /staged/
+        cp -a /openssl/usr/lib/*.so* /staged/
+        cp -a /libevent/usr/lib/*.so* /staged/
+EOF
 FROM stagex/core-filesystem AS package
 COPY --from=stagex/core-musl . /
-COPY --from=stagex/core-zlib /usr/lib/*.so* /usr/lib/
-COPY --from=stagex/core-libzstd /usr/lib/*.so* /usr/lib/
-COPY --from=stagex/core-xz /usr/lib/*.so* /usr/lib/
-COPY --from=stagex/core-openssl /usr/lib/*.so* /usr/lib/
-COPY --from=stagex/user-libevent /usr/lib/*.so* /usr/lib/
+COPY --from=staging /staged/. /usr/lib/
 COPY --from=build /usr/bin/tor /usr/bin/
 USER user
 ENTRYPOINT ["/usr/bin/tor"]
