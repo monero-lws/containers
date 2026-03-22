@@ -11,7 +11,6 @@ RUN <<-EOF
        CFLAGS="-O2" ./configure --prefix=/usr --sysconfdir=/etc
        make -j$(nproc)
        make install
-       mkdir -p /var/lib/tor
 EOF
 
 FROM stagex/core-filesystem AS package
@@ -22,6 +21,5 @@ COPY --from=stagex/core-xz /usr/lib/*.so* /usr/lib/
 COPY --from=stagex/core-openssl /usr/lib/*.so* /usr/lib/
 COPY --from=stagex/user-libevent /usr/lib/*.so* /usr/lib/
 COPY --from=build /usr/bin/tor /usr/bin/
-COPY --chown=user:user --from=build /var/lib/tor/ /var/lib/tor/
 USER user
 ENTRYPOINT ["/usr/bin/tor"]

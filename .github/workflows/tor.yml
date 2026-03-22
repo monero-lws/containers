@@ -2,7 +2,7 @@ name: Build+Push tor Container Image
 on:
   push:
     branches: [ "main" ]
-    paths: [ "tor" ]
+    paths: [ "tor/*" ]
 jobs:
   build_and_push:
     runs-on: ubuntu-latest
