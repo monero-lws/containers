@@ -1,0 +1,23 @@
+name: Build+Push monerod Container Image
+on:
+  push:
+    branches: [ "main" ]
+    paths: [ "monerod/*" ]
+jobs:
+  build_and_push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+    - uses: actions/checkout@v3
+    - name: Build Docker image
+      run: docker build --no-cache --tag ghcr.io/monero-lws/monerod:latest monerod
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+    - name: Push to GitHub Container Registry
+      run: docker push -a ghcr.io/monero-lws/monerod
