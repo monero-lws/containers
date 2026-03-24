@@ -116,6 +116,6 @@ EXPOSE 18080
 EXPOSE 18083
 EXPOSE 18089
 
-HEALTHCHECK --interval=30s --timeout=5s CMD /usr/bin/wget --spider http://127.0.0.1:18081/get_height || exit 1
+HEALTHCHECK --interval=30s --timeout=5s CMD /bin/sh -c "wget --spider http://127.0.0.1:18081/get_height || exit 1"
 ENTRYPOINT [ "/usr/local/bin/monerod", "--non-interactive" ]
 CMD ["--rpc-restricted-bind-ip=0.0.0.0", "--rpc-restricted-bind-port=18089", "--no-igd", "--zmq-rpc-bind-ip=0.0.0.0", "--confirm-external-bind", "--zmq-pub=tcp://0.0.0.0:18083", "--enable-dns-blocklist", "--ban-list=/home/monero/ban_list.txt"]
