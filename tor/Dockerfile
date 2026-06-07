@@ -5,9 +5,9 @@ COPY --from=stagex/core-curl . /
 COPY --from=stagex/core-ca-certificates . /
 RUN <<-EOF
        curl -O -L https://dist.torproject.org/tor-0.4.9.5.tar.gz
-       echo "c949c2f86b348e64891976f6b1e49c177655b23df97193049bf1b8cd3099e179 tor-0.4.9.5.tar.gz" | sha256sum -c
-       tar -xf tor-0.4.9.5.tar.gz
-       cd tor-0.4.9.5
+       echo "bd75ba7fd68f607c7806fcf70156a300aa926e9ad69a5e56a8e6414f5227e833 tor-0.4.9.9.tar.gz" | sha256sum -c
+       tar -xf tor-0.4.9.9.tar.gz
+       cd tor-0.4.9.9
        CFLAGS="-O2" ./configure --prefix=/usr --sysconfdir=/etc
        make -j$(nproc)
        make install
