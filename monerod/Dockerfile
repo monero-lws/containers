@@ -7,7 +7,6 @@ COPY --from=stagex/core-boost . /
 COPY --from=stagex/user-libsodium . /
 COPY --from=stagex/core-expat . /
 COPY --from=stagex/user-zeromq /usr/lib/. /usr/lib
-COPY --from=stagex/user-zeromq /usr/lib64/. /usr/lib64
 COPY --from=stagex/user-zeromq /usr/include/. /usr/include
 COPY --from=stagex/user-eudev . /
 COPY --from=stagex/user-libusb . /
