@@ -1,5 +1,5 @@
-ARG MONERO_BRANCH=v0.18.4.6
-ARG MONERO_COMMIT_HASH=dbcc7d212c094bd1a45f7291dbb99a4b4627a96d
+ARG MONERO_BRANCH=v0.18.5.1
+ARG MONERO_COMMIT_HASH=4f92268d7c16741cfb41e5bbe2aa46cc260a9ea5
 
 FROM stagex/pallet-clang-cmake-busybox AS build
 COPY --from=stagex/core-openssl . /
