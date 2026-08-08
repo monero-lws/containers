@@ -86,10 +86,11 @@ COPY --from=stagex/core-libunwind . /libunwind
 RUN <<-EOF
         mkdir /staged
         cp -a /musl/usr/lib/*.so* /staged/
-        cp -a /libcxx/usr/lib/*.so* /staged/
+        cp -a /libcxx/usr/lib/*.so.1 /staged/
         cp -a /libcxxabi/usr/lib/*.so* /staged/
         cp -a /libunwind/usr/lib/*.so* /staged/
         strip --strip-debug /staged/*
+        cp -a /libcxx/usr/lib/libc++.so /staged/
 EOF
 
 # Change default username to monero and copy binaries
