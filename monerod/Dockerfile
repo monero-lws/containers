@@ -6,8 +6,7 @@ COPY --from=stagex/core-openssl . /
 COPY --from=stagex/core-boost . /
 COPY --from=stagex/user-libsodium . /
 COPY --from=stagex/core-expat . /
-COPY --from=stagex/user-zeromq /usr/lib/. /usr/lib
-COPY --from=stagex/user-zeromq /usr/include/. /usr/include
+COPY --from=stagex/user-zeromq . /
 COPY --from=stagex/user-eudev . /
 COPY --from=stagex/user-libusb . /
 COPY --from=stagex/core-sqlite3 . /
@@ -57,7 +56,7 @@ RUN <<-EOF
                 https://github.com/monero-project/monero .
         test `git rev-parse HEAD` = ${MONERO_COMMIT_HASH} || exit 1
         mkdir -p build/release && cd build/release
-        cmake -D STATIC=ON -D CMAKE_BUILD_TYPE=Release -D STACK_TRACE=OFF /monero
+        cmake -D CMAKE_BUILD_TYPE=Release -D STACK_TRACE=OFF /monero
         cmake --build . -t daemon -j$(nproc)
 	strip --strip-unneeded /monero/build/release/bin/monerod
 EOF
@@ -79,16 +78,33 @@ EOF
 
 # Remove static libs and try to keep symlinks
 FROM stagex/pallet-clang-cmake-busybox AS staging
+COPY --from=stagex/core-boost . /boost
 COPY --from=stagex/core-musl . /musl
 COPY --from=stagex/core-libcxx . /libcxx
 COPY --from=stagex/core-libcxxabi . /libcxxabi
+COPY --from=stagex/core-openssl . /openssl
 COPY --from=stagex/core-libunwind . /libunwind
+COPY --from=stagex/core-xz . /libxz
+COPY --from=stagex/user-libsodium . /libsodium
+COPY --from=stagex/user-zeromq . /zeromq
 RUN <<-EOF
         mkdir /staged
+        cp -a /boost/usr/lib/*atomic* /staged/
+        cp -a /boost/usr/lib/*chrono* /staged/
+        cp -a /boost/usr/lib/*container* /staged/
+        cp -a /boost/usr/lib/*date_time* /staged/
+        cp -a /boost/usr/lib/*filesystem* /staged/
+        cp -a /boost/usr/lib/*program_options* /staged/
+        cp -a /boost/usr/lib/*serialization* /staged/
+        cp -a /boost/usr/lib/*thread* /staged
         cp -a /musl/usr/lib/*.so* /staged/
         cp -a /libcxx/usr/lib/*.so.1 /staged/
         cp -a /libcxxabi/usr/lib/*.so* /staged/
+        cp -a /openssl/usr/lib/*.so* /staged/
         cp -a /libunwind/usr/lib/*.so* /staged/
+        cp -a /libxz/usr/lib/*.so* /staged/
+        cp -a /libsodium/usr/lib/*.so* /staged/
+        cp -a /zeromq/usr/lib/*.so* /staged/
         strip --strip-debug /staged/*
         cp -a /libcxx/usr/lib/libc++.so /staged/
 EOF
