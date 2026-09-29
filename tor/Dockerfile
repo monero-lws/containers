@@ -4,10 +4,10 @@ COPY --from=stagex/user-libevent . /
 COPY --from=stagex/core-curl . /
 COPY --from=stagex/core-ca-certificates . /
 RUN <<-EOF
-       curl -O -L https://dist.torproject.org/tor-0.4.9.12.tar.gz
-       echo "c0d307c9dcdaee4848a8ca53e9d6c4ec92823e4f30be12790b0fbddfc6515f5b  tor-0.4.9.12.tar.gz" | sha256sum -c
-       tar -xf tor-0.4.9.12.tar.gz
-       cd tor-0.4.9.12
+       curl -O -L https://dist.torproject.org/tor-0.4.9.13.tar.gz
+       echo "5e748d3272cdf44a7d7741173f371c8def3d96eecb77e93c89c50663ce9cc792  tor-0.4.9.13.tar.gz" | sha256sum -c
+       tar -xf tor-0.4.9.13.tar.gz
+       cd tor-0.4.9.13
        CFLAGS="-O2" ./configure --prefix=/usr --sysconfdir=/etc
        make -j$(nproc)
        make install
